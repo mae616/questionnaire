@@ -12,6 +12,9 @@ import {
   Button
 } from '@mui/material';
 import Head from 'next/head'
+
+import { db, collection, addDoc } from '../config/firebaseApp'
+
 export default function Home() {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -31,10 +34,15 @@ export default function Home() {
 
   const onSubmit = (data) => {
     // デフォルトの挙動は自動的にキャンセルしてくれる
-    console.log(data)
+    const { learnedLunguage, ...restData } = data
+
+    /*const docRef = */addDoc(collection(db, 'answers'), {
+      ...restData,
+      learnedLunguage: showLearnedLunguage() ? learnedLunguage : ''
+    })
+
+    // console.log('answers', docRef)
   }
-
-
 
   return (
     <>
