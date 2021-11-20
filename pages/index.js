@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import {
   Container,
@@ -7,15 +8,34 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
-  FormHelperText
+  FormHelperText,
+  Button
 } from '@mui/material';
 import Head from 'next/head'
 export default function Home() {
   const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const [isLearningValue, setIsLearningValue] = useState('')
+  const [wasLearningValue, setWasLearningValue] = useState('')
+
+  const onChange_isLearning = (e) => {
+    setIsLearningValue(e.target.value)
+  }
+
+  const onChange_wasLearning = (e) => {
+    setWasLearningValue(e.target.value)
+  }
+
+  const showLearnedLunguage = () => (isLearningValue === 'yes' || wasLearningValue === 'yes')
+
+
   const onSubmit = (data) => {
     // デフォルトの挙動は自動的にキャンセルしてくれる
     console.log(data)
   }
+
+
+
   return (
     <>
       <Head>
@@ -28,7 +48,6 @@ export default function Home() {
           </h1>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label htmlFor="name"></label><br />
               <TextField
                 id="name"
                 label="Q1.名前を入力してください(匿名可）。"
@@ -40,7 +59,6 @@ export default function Home() {
               />
             </div>
             <div>
-              <label htmlFor="birth"></label><br />
               <TextField
                 id="birth"
                 label="Q2.生年月日を入力してください(例: 19900101)。"
@@ -61,26 +79,40 @@ export default function Home() {
             <div>
               <FormControl component="fieldset" error={'isLearning' in errors}>
                 <FormLabel component="legend">Q3.現在、プログラミングを学習していますか？</FormLabel>
-                <RadioGroup row aria-label="isLearning" name="isLearning-group">
-                  <FormControlLabel value="yes" control={<Radio />} label="はい"  {...register('isLearning', { required: true })} />
-                  <FormControlLabel value="no" control={<Radio />} label="いいえ"  {...register('isLearning', { required: true })} />
-                  <FormControlLabel value="other" control={<Radio />} label="わからない"  {...register('isLearning', { required: true })} />
+                <RadioGroup row aria-label="isLearning" name="isLearning-group" onChange={onChange_isLearning}>
+                  <FormControlLabel value="yes" control={<Radio />} label="はい" {...register('isLearning', { required: true })} />
+                  <FormControlLabel value="no" control={<Radio />} label="いいえ" {...register('isLearning', { required: true })} />
+                  <FormControlLabel value="other" control={<Radio />} label="わからない" {...register('isLearning', { required: true })} />
                 </RadioGroup>
                 <FormHelperText>{errors.isLearning && 'このフィールドは回答必須です。'}</FormHelperText>
               </FormControl>
             </div>
             <div>
-              <FormControl component="fieldset" error={'isLearning' in errors}>
+              <FormControl component="fieldset" error={'wasLearning' in errors}>
                 <FormLabel component="legend">Q4.これまでに、プログラミングを学習したことありますか？</FormLabel>
-                <RadioGroup row aria-label="wasLearning" name="wasLearning-group">
-                  <FormControlLabel value="yes" control={<Radio />} label="はい"  {...register('wasLearning', { required: true })} />
-                  <FormControlLabel value="no" control={<Radio />} label="いいえ"  {...register('wasLearning', { required: true })} />
-                  <FormControlLabel value="other" control={<Radio />} label="わからない"  {...register('wasLearning', { required: true })} />
+                <RadioGroup row aria-label="wasLearning" name="wasLearning-group" onChange={onChange_wasLearning}>
+                  <FormControlLabel value="yes" control={<Radio />} label="はい" {...register('wasLearning', { required: true })} />
+                  <FormControlLabel value="no" control={<Radio />} label="いいえ" {...register('wasLearning', { required: true })} />
+                  <FormControlLabel value="other" control={<Radio />} label="わからない" {...register('wasLearning', { required: true })} />
                 </RadioGroup>
                 <FormHelperText>{errors.wasLearning && 'このフィールドは回答必須です。'}</FormHelperText>
               </FormControl>
             </div>
-            <button type="submit">アンケートを提出する</button>
+            {showLearnedLunguage() && (
+              <div>
+                <TextField
+                  id="learnedLunguage"
+                  label="Q5.今まで学習したことのあるプログラミング言語をすべて教えてください。"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  margin="normal"
+                  {...register('learnedLunguage')}
+                />
+              </div>
+            )}
+
+            <Button type="submit" variant="contained">アンケートを提出する</Button>
           </form>
         </Container>
       </main>
