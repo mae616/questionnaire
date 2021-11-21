@@ -33,6 +33,4 @@ yarn-error.log*
 # vercel
 .vercel
 
-# 認証
-/config/firebaseApp.js
-.vscode
+.env.local

@@ -36,12 +36,12 @@ export default function Home() {
     // デフォルトの挙動は自動的にキャンセルしてくれる
     const { learnedLunguage, ...restData } = data
 
-    /*const docRef = */addDoc(collection(db, 'answers'), {
+    const docRef = addDoc(collection(db, 'answers'), {
       ...restData,
       learnedLunguage: showLearnedLunguage() ? learnedLunguage : ''
     })
 
-    // console.log('answers', docRef)
+    console.log('answers', docRef)
   }
 
   return (
