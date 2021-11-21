@@ -18,17 +18,23 @@ import { db, collection, addDoc } from '../config/firebaseApp'
 export default function Home() {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
+  // 現在、プログラミングを学習していますか？の値
   const [isLearningValue, setIsLearningValue] = useState('')
+
+  // これまでに、プログラミングを学習したことありますか？の値
   const [wasLearningValue, setWasLearningValue] = useState('')
 
+  // 現在、プログラミングを学習していますか？の値の設定
   const onChange_isLearning = (e) => {
     setIsLearningValue(e.target.value)
   }
 
+  // これまでに、プログラミングを学習したことありますか？の値の設定
   const onChange_wasLearning = (e) => {
     setWasLearningValue(e.target.value)
   }
 
+  // 今まで学習したことのあるプログラミング言語の質問表示の判定
   const showLearnedLunguage = () => (isLearningValue === 'yes' || wasLearningValue === 'yes')
 
 
@@ -36,11 +42,14 @@ export default function Home() {
     // デフォルトの挙動は自動的にキャンセルしてくれる
     const { learnedLunguage, ...restData } = data
 
+    // firebaseに登録
     const docRef = addDoc(collection(db, 'answers'), {
       ...restData,
+      // 今まで学習したことのあるプログラミング言語 を入力欄が非表示の場合は、空文字にする
       learnedLunguage: showLearnedLunguage() ? learnedLunguage : ''
     })
 
+    // テスト(レビュー用に登録されたか、コンソール出力)
     console.log('answers', docRef)
   }
 
