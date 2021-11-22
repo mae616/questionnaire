@@ -17,12 +17,21 @@ import firebaseApp from '../config/firebaseApp'
 import { getFirestore, collection, addDoc } from 'firebase/firestore'
 
 export default function Home() {
-  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset
+  } = useForm({
+    defaultValues: {
+      isLearning: "",
+      wasLearning: "",
+    },
+  });
 
   // 今まで学習したことのあるプログラミング言語の質問表示の判定
   const showLearnedLunguage = () => (watch('isLearning') === 'yes' || watch('wasLearning') === 'yes')
-
-  console.log(watch())
 
   const onSubmit = async (data) => {
     // デフォルトの挙動は自動的にキャンセルしてくれる
@@ -41,7 +50,7 @@ export default function Home() {
       })
 
     } catch (err) {
-      alert(`error: ${err}`)
+      alert('エラー')
       return
     }
 
@@ -50,8 +59,6 @@ export default function Home() {
         reset()
       }
     }
-    // テスト(レビュー用に登録されたか、コンソール出力)
-    console.log('answers', docRef)
   }
 
   return (
@@ -94,63 +101,10 @@ export default function Home() {
                 helperText={errors.birth?.message}
               />
             </div>
-            {/* <div>
-              Q3.現在、プログラミングを学習していますか？<br />
-              <input
-                id="isLearning_yes"
-                {...register('isLearning', { required: true })}
-                type="radio"
-                value="yes"
-              />
-              <label htmlFor="isLearning_yes">はい</label>
-              <input
-                id="isLearning_no"
-                {...register('isLearning', { required: true })}
-                type="radio"
-                value="no"
-              />
-              <label htmlFor="isLearning_no">いいえ</label>
-              <input
-                id="isLearning_etc"
-                {...register('isLearning', { required: true })}
-                type="radio"
-                value="etc"
-              />
-              <label htmlFor="isLearning_etc">わからない</label><br />
-              {errors.isLearning && <span>このフィールドは回答必須です。</span>}
-            </div>
-            <div>
-              Q4.これまでに、プログラミングを学習したことありますか？<br />
-              <input
-                id="wasLearning_yes"
-                {...register('wasLearning', { required: true })}
-                type="radio"
-                value="yes"
-              />
-              <label htmlFor="wasLearning_yes">はい</label>
-
-              <input
-                id="wasLearning_no"
-                {...register('wasLearning', { required: true })}
-                type="radio"
-                value="no"
-              />
-              <label htmlFor="wasLearning_no">いいえ</label>
-              <input
-                id="wasLearning_etc"
-                {...register('wasLearning', { required: true })}
-                type="radio"
-                value="etc"
-              />
-              <label htmlFor="wasLearning_etc">わからない</label><br />
-              {errors.wasLearning && <span>このフィールドは回答必須です。</span>}
-            </div> */}
-
-
             <div>
               <FormControl component="fieldset" error={'isLearning' in errors}>
                 <FormLabel component="legend">Q3.現在、プログラミングを学習していますか？</FormLabel>
-                <RadioGroup row aria-label="isLearning" name="isLearning-group">
+                <RadioGroup value={watch("isLearning")} row aria-label="isLearning" name="isLearning-group">
                   <FormControlLabel value="yes" control={<Radio {...register('isLearning', { required: true })} />} label="はい" />
                   <FormControlLabel value="no" control={<Radio {...register('isLearning', { required: true })} />} label="いいえ" />
                   <FormControlLabel value="other" control={<Radio {...register('isLearning', { required: true })} />} label="わからない" />
@@ -161,7 +115,7 @@ export default function Home() {
             <div>
               <FormControl component="fieldset" error={'wasLearning' in errors}>
                 <FormLabel component="legend">Q4.これまでに、プログラミングを学習したことありますか？</FormLabel>
-                <RadioGroup row aria-label="wasLearning" name="wasLearning-group">
+                <RadioGroup value={watch("wasLearning")} row aria-label="wasLearning" name="wasLearning-group">
                   <FormControlLabel value="yes" control={<Radio />} label="はい" {...register('wasLearning', { required: true })} />
                   <FormControlLabel value="no" control={<Radio />} label="いいえ" {...register('wasLearning', { required: true })} />
                   <FormControlLabel value="other" control={<Radio />} label="わからない" {...register('wasLearning', { required: true })} />
